@@ -15,3 +15,7 @@ void Scene::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         target.draw(*object, states);
     }
 }
+
+void Scene::addMeteor() { 
+    objects_.push_back(std::make_unique<Meteor>());
+}

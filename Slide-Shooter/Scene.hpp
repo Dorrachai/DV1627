@@ -1,5 +1,6 @@
 #pragma once
 #include "SideSlider.hpp"
+#include "Meteor.hpp"
 #include <vector>
 #include <memory>
 
@@ -11,4 +12,6 @@ public:
     Scene();
     void update(float dt);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
+    void addMeteor(); 
 };
