@@ -1,0 +1,5 @@
+﻿  Bullet.cpp
+  Main.cpp
+H:\skola\slider-shot-game\slider-shot-game\Main.cpp(74,63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Generating Code...
+  slider-shot-game.vcxproj -> H:\skola\slider-shot-game\x64\Debug\slider-shot-game.exe
