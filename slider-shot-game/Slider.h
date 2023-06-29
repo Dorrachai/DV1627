@@ -13,13 +13,15 @@ public:
     void MoveDown();
     void Shoot(float maxRange);
     void UpdateReadyBullet();
+    void DecreaseHealth();
 
     sf::RectangleShape shape;
-    float moveSpeed = 0.15f; // adjust this value to make the slider move slower
+    float moveSpeed = 0.15f;
     std::vector<Bullet> bullets;
 
-    Bullet readyBullet; // this bullet will be visible in front of the slider
-    float shootCooldown; // the cooldown time until the player can shoot again
+    Bullet readyBullet;
+    float shootCooldown;
+    int playerHealth = 3;
 };
 
 #endif

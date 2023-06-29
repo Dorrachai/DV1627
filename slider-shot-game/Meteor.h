@@ -12,7 +12,7 @@ public:
 
     float x, y;
     sf::CircleShape shape;
-    float moveSpeed = 0.03f; // Reduce the speed by a factor of 0.25
+    float moveSpeed = 0.05f; // Reduce the speed by a factor of 0.25
 };
 
 #endif

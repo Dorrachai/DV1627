@@ -1,5 +1,13 @@
-﻿  Bullet.cpp
-  Main.cpp
-H:\skola\slider-shot-game\slider-shot-game\Main.cpp(74,63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  Generating Code...
+﻿  Main.cpp
+H:\skola\slider-shot-game\slider-shot-game\Main.cpp(29,73): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+H:\skola\slider-shot-game\slider-shot-game\Main.cpp(29,49): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+H:\skola\slider-shot-game\slider-shot-game\Main.cpp(93,67): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   slider-shot-game.vcxproj -> H:\skola\slider-shot-game\x64\Debug\slider-shot-game.exe

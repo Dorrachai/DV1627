@@ -8,10 +8,30 @@ int main()
     sf::RenderWindow window(sf::VideoMode(800, 600), "SFML Game!");
     Slider slider(0.f, 300.f);
     std::vector<Meteor> meteors;
-    int meteorTimer = 0;
-    float maxRange = window.getSize().x * 0.8f; // max range is 80% of the window width
+    float maxRange = window.getSize().x * 0.8f;
 
-    sf::Clock clock;  // to track time for bullet shooting delay
+    sf::Font font;
+    if (!font.loadFromFile("Comic_Neue"))
+    {
+        // Handle error...
+    }
+
+    sf::Text healthText;
+    healthText.setFont(font);
+    healthText.setCharacterSize(24);
+    healthText.setFillColor(sf::Color::White);
+    healthText.setPosition(10.f, 10.f);
+
+    sf::Text gameOverText;
+    gameOverText.setFont(font);
+    gameOverText.setCharacterSize(48);
+    gameOverText.setFillColor(sf::Color::Red);
+    gameOverText.setPosition(window.getSize().x / 2, window.getSize().y / 2);
+    gameOverText.setString("GAME OVER");
+
+    sf::Clock clock;
+    sf::Clock meteorClock;
+    float meteorSpawnInterval = 2.f;
 
     while (window.isOpen())
     {
@@ -30,75 +50,89 @@ int main()
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && slider.shootCooldown <= 0.f)
         {
             slider.Shoot(maxRange);
-            slider.shootCooldown = 1.f; // Set the cooldown to 1 second
+            slider.shootCooldown = 1.f;
         }
 
-        slider.shootCooldown -= clock.restart().asSeconds(); // Decrease the shoot cooldown based on elapsed time
+        slider.shootCooldown -= clock.restart().asSeconds();
 
         if (slider.shootCooldown < 0)
         {
-            slider.shootCooldown = 0.f; // Don't let the cooldown go below 0
+            slider.shootCooldown = 0.f;
         }
 
-        slider.UpdateReadyBullet(); // Update the ready bullet's position
+        slider.UpdateReadyBullet();
 
-        // Check bullet movement
         for (int i = 0; i < slider.bullets.size(); i++)
         {
             slider.bullets[i].Move();
 
-            // If the bullet is off the right edge of the screen
             if (slider.bullets[i].shape.getPosition().x > window.getSize().x)
             {
                 slider.bullets.erase(slider.bullets.begin() + i);
-                i--;  // Decrease index to prevent skipping a bullet due to erasure
+                i--;
             }
-            else  // If the bullet is still on the screen, check collision with meteors
+            else
             {
                 for (int j = 0; j < meteors.size(); j++)
                 {
                     if (slider.bullets[i].shape.getGlobalBounds().intersects(meteors[j].shape.getGlobalBounds()))
                     {
-                        // Collision detected, erase bullet and meteor
-                        slider.bullets.erase(slider.bullets.begin() + i);
                         meteors.erase(meteors.begin() + j);
-                        i--;  // Decrease index to prevent skipping a bullet due to erasure
-                        break;  // Exit inner loop to prevent undefined behavior due to erasure
+                        slider.bullets.erase(slider.bullets.begin() + i); // erase bullet
+                        slider.shootCooldown = 0.f; // reset the bullet cooldown
+                        i--;
+                        break;
                     }
                 }
             }
         }
 
-        if (meteorTimer <= 0)
+        if (meteorClock.getElapsedTime().asSeconds() >= meteorSpawnInterval)
         {
-            meteors.push_back(Meteor(800, rand() % (600 - 20) + 10)); // 10 is the radius of the meteor, 20 is twice the radius
-            meteorTimer = 5000; // adding a delay between meteor spawns (in frames)
+            for (int i = 0; i < 3; ++i) { // spawn 3 meteors
+                meteors.push_back(Meteor(800, rand() % (600 - 20) + 10));
+            }
+            meteorClock.restart(); // reset the meteor clock
         }
 
-        // Check meteor movement
         for (int i = 0; i < meteors.size(); i++)
         {
             meteors[i].Move();
 
-            // If the meteor is off the left edge of the screen
-            if (meteors[i].shape.getPosition().x < 0)
+            if (meteors[i].shape.getPosition().x < 0.f - meteors[i].shape.getRadius())
             {
                 meteors.erase(meteors.begin() + i);
-                i--;  // Decrease index to prevent skipping a meteor due to erasure
+                slider.playerHealth--;
+                i--;
             }
         }
 
         window.clear();
 
-        slider.Draw(window);
-        for (Meteor& meteor : meteors)
+        if (slider.playerHealth > 0)
         {
-            meteor.Draw(window);
+            slider.Draw(window);
+
+            for (auto& bullet : slider.bullets)
+                bullet.Draw(window);
+
+            for (auto& meteor : meteors)
+                meteor.Draw(window);
+        }
+
+        std::string healthString;
+        for (int i = 0; i < slider.playerHealth; i++)
+            healthString += "* ";
+        healthText.setString(healthString);
+
+        window.draw(healthText);
+
+        if (slider.playerHealth <= 0)
+        {
+            window.draw(gameOverText);
         }
 
         window.display();
-
-        if (meteorTimer > 0) meteorTimer--;
     }
 
     return 0;

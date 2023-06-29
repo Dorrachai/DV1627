@@ -45,3 +45,10 @@ void Slider::MoveDown()
 {
     shape.move(0.f, moveSpeed);
 }
+
+void Slider::DecreaseHealth()
+{
+    playerHealth--;
+    if (playerHealth < 0)
+        playerHealth = 0;
+}
